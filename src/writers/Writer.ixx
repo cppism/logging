@@ -13,6 +13,9 @@ public:
       LogLevel level,
       const std::string_view &message
   ) const = 0;
+
+protected:
+  static std::chrono::sys_time<std::chrono::milliseconds> getTimePoint();
 };
 
 }

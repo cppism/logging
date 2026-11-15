@@ -27,6 +27,18 @@ public:
     write(level, std::format(message, std::forward<TArgs>(args)...));
   }
 
+  void debug(std::string_view const &message) const;
+
+  template <typename... TArgs>
+  void debug(
+      const std::format_string<TArgs...> &message,
+      TArgs &&...args
+  ) const {
+    log(LogLevel::Debug,
+        message,
+        std::forward<TArgs>(args)...);
+  }
+
   void info(std::string_view const &message) const;
 
   template <typename... TArgs>

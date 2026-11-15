@@ -7,6 +7,12 @@ void ConsoleWriter::write(
     const std::string_view &message
 ) const {
   std::ostream &stream(level == LogLevel::Error ? std::cerr : std::cout);
+  stream << std::format(
+                "{:%T} {:<}",
+                getTimePoint(),
+                level
+            )
+         << " ";
   stream << message << std::endl;
 }
 

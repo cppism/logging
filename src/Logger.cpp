@@ -13,12 +13,16 @@ void Logger::log(
   write(level, message);
 }
 
-void Logger::warn(const std::string_view &message) const {
-  log(LogLevel::Warning, message);
+void Logger::debug(const std::string_view &message) const {
+  log(LogLevel::Debug, message);
 }
 
 void Logger::info(const std::string_view &message) const {
   log(LogLevel::Info, message);
+}
+
+void Logger::warn(const std::string_view &message) const {
+  log(LogLevel::Warning, message);
 }
 
 void Logger::error(const std::string_view &message) const {
