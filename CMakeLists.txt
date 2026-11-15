@@ -1,0 +1,56 @@
+cmake_minimum_required(VERSION 4.5)
+
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_options(
+            -Wall -Wextra -Wpedantic
+    )
+endif ()
+enable_testing()
+
+set(PROJECT_GROUP_NAME "cppism")
+include(artifact.cmake)
+project(
+        "${PROJECT_GROUP_NAME}.${PROJECT_ARTIFACT_NAME}"
+        VERSION ${PROJECT_ARTIFACT_VERSION}
+        LANGUAGES CXX
+)
+
+add_library(${PROJECT_NAME} SHARED)
+set_target_properties(
+        ${PROJECT_NAME} PROPERTIES
+        VERSION ${CMAKE_PROJECT_VERSION}
+        SOVERSION ${CMAKE_PROJECT_VERSION_MAJOR}.${CMAKE_PROJECT_VERSION_MINOR}
+        EXPORT_NAME "${PROJECT_GROUP_NAME}::${PROJECT_ARTIFACT_NAME}"
+)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_23)
+add_subdirectory(src)
+
+set(TESTS_PROJECT_NAME ${PROJECT_NAME}.tests)
+add_executable(${TESTS_PROJECT_NAME})
+add_subdirectory(tests)
+
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+set(PACKAGE_CONFIG_FILE_NAME "${PROJECT_NAME}-config.cmake")
+set(PACKAGE_CONFIG_VERSION_FILE_NAME "${PROJECT_NAME}-config-version.cmake")
+set(PACKAGE_CONFIG_INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}-${CMAKE_PROJECT_VERSION}")
+set(PACKAGE_CXX_MODULES_INSTALL_DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_GROUP_NAME}/${PROJECT_ARTIFACT_NAME}-${CMAKE_PROJECT_VERSION}")
+write_basic_package_version_file(
+        ${PACKAGE_CONFIG_VERSION_FILE_NAME}
+        COMPATIBILITY SameMinorVersion
+)
+install(
+        TARGETS ${PROJECT_NAME}
+        EXPORT PROJECT_TARGETS
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        FILE_SET CXX_MODULES DESTINATION ${PACKAGE_CXX_MODULES_INSTALL_DESTINATION}
+)
+install(
+        EXPORT PROJECT_TARGETS
+        FILE ${PACKAGE_CONFIG_FILE_NAME}
+        DESTINATION ${PACKAGE_CONFIG_INSTALL_DESTINATION}
+)
+install(
+        FILES "${CMAKE_BINARY_DIR}/${PACKAGE_CONFIG_VERSION_FILE_NAME}"
+        DESTINATION ${PACKAGE_CONFIG_INSTALL_DESTINATION}
+)

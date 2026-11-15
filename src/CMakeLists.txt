@@ -1,0 +1,18 @@
+file(
+        GLOB_RECURSE TARGET_INTERFACE_FILES
+        CONFIGURE_DEPENDS *.ixx
+)
+target_sources(
+        ${PROJECT_NAME} PUBLIC
+        FILE_SET CXX_MODULES FILES
+        ${TARGET_INTERFACE_FILES}
+)
+
+file(
+        GLOB_RECURSE TARGET_IMPLEMENTATION_FILES
+        CONFIGURE_DEPENDS *.cpp
+)
+target_sources(
+        ${PROJECT_NAME} PRIVATE
+        ${TARGET_IMPLEMENTATION_FILES}
+)

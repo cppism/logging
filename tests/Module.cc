@@ -1,0 +1,1 @@
+export module cppism.logging.tests;
